@@ -3,6 +3,7 @@
 export function createStore(reducer, initialState) {
     let state = initialState;
     let listeners = [];
+    
     function getState() {
         return state;
     }

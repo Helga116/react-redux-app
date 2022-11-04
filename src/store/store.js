@@ -1,11 +1,17 @@
-import { createStore } from "redux";
-import { taskReducer } from "./taskReducer";
+import { createStore, compose, applyMiddleware } from "redux";
+import { logger } from "./middleware/logger";
+import { thunk } from "./middleware/thunk";
+import taskReducer from "./task";
 
 // сам store, точнее его создание с начальным состоянием
-const initialState = [
-    { id: 1, title: "Task 1", completed: false },
-    { id: 2, title: "Task 2", completed: false }
-];
-export function initiateStore() {
-    return createStore(taskReducer, initialState);
+
+const middlewareEnhancer = applyMiddleware(logger, thunk);
+
+function configureStore() {
+    return createStore(
+        taskReducer, compose(middlewareEnhancer, 
+        window.__REDUX_DEVTOOLS_EXTENSION__ &&
+            window.__REDUX_DEVTOOLS_EXTENSION__()
+    ));
 }
+export default configureStore;
